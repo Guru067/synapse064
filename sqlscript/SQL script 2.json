@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 2",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://storageaccount069.dfs.core.windows.net/source/csvfile/Students Social Media Addiction.csv',\n        FORMAT = 'CSV',\n        HEADER_ROW= TRUE,\n        PARSER_VERSION = '2.0'\n    ) AS [result]\n\nCREATE EXTERNAL TABLE dbo.SocialMediaUsage\n(\n    Student_ID INT,\n    Age INT,\n    Gender VARCHAR(10),\n    Academic_Level VARCHAR(50),\n    Country VARCHAR(50),\n    Avg_Daily_Usage_Hours FLOAT,\n    Most_Used_Platform VARCHAR(50),\n    Affects_Academic_Performance VARCHAR(5),\n    Sleep_Hours_Per_Night FLOAT,\n    Mental_Health_Score INT,\n    Relationship_Status VARCHAR(30),\n    Conflicts_Over_Social_Media INT,\n    Addicted_Score INT\n)\nWITH (\n    LOCATION = 'https://storageaccount069.dfs.core.windows.net/source/csvfile/Students Social Media Addiction.csv',  -- folder path inside container\n    DATA_SOURCE = MyDataSource,\n    FILE_FORMAT = MyCSVFormat\n);\n\nCREATE EXTERNAL DATA SOURCE MyDataSource\nWITH (\n    LOCATION = 'https://storageaccount069.dfs.core.windows.net/source'\n);\n\ncreate DATABASE ADLS\n\nCREATE EXTERNAL FILE FORMAT MyCSVFormat\nWITH (\n    FORMAT_TYPE = DELIMITEDTEXT,\n    FORMAT_OPTIONS (\n        FIELD_TERMINATOR = ',',\n        STRING_DELIMITER = '\"',\n        FIRST_ROW = 2\n    )\n);\n\nselect * from dbo.SocialMediaUsage",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "ADLS",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
