@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE Sales_hash\n(\n    cust_id INT,\n    prod_id INT,\n    amount INT\n)\nWITH\n(\n    DISTRIBUTION = HASH(cust_id),\n    CLUSTERED COLUMNSTORE INDEX\n);\n\nCREATE TABLE Sales_RR\n(\n    cust_id INT,\n    prod_id INT,\n    amount INT\n)\nWITH\n(\n    DISTRIBUTION = ROUND_ROBIN,\n    CLUSTERED COLUMNSTORE INDEX\n);\n\nCREATE TABLE PRODUCT\n(\n    prod_id INT,\n    prod_name VARCHAR(100)\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE\n);\n\nINSERT INTO Sales_hash SELECT\n101, 1, 500\nUNION ALL SELECT 102, 2, 1500\nUNION ALL SELECT 103, 3, 250\nUNION ALL SELECT 104, 4, 750\nUNION ALL SELECT 105, 5, 3000\nUNION ALL SELECT 106, 6, 125;\n\ndrop table Sales_hash\n\nINSERT INTO Sales_RR SELECT\n101, 1, 500\nUNION ALL SELECT 102, 2, 1500\nUNION ALL SELECT 103, 3, 250\nUNION ALL SELECT 104, 4, 750\nUNION ALL SELECT 105, 5, 3000\nUNION ALL SELECT 106, 6, 125;\n\nINSERT INTO PRODUCT SELECT 1, 'Laptop'\nUNION ALL SELECT 2, 'Mobile'\nUNION ALL SELECT 3, 'Tablet'\nUNION ALL SELECT 4, 'Monitor';\n\nselect SUM(amount) as total_revenue from Sales_hash\n\nCREATE TABLE Sales_heap\n(\n    cust_id INT,\n    prod_id INT,\n    amount INT\n)\nWITH\n(\n    DISTRIBUTION = ROUND_ROBIN,\n    HEAP\n);\n\nselect * from Sales_hash",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "dsqlpool",
+				"poolName": "dsqlpool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
